@@ -2,12 +2,12 @@ const { EmbedBuilder } = require("@discordjs/builders");
 // const { Client, GatewayIntentBits, Partials, Events, codeBlock } = require("discord.js");
 const { blue } = require("colors")
 const { GatewayDispatchEvents, GatewayIntentBits, InteractionType, MessageFlags, Client  } = require("@discordjs/core");
-const token = "MTA4NzQ3ODMwOTY2NDg0OTk1MA.GcgcvE.PaaBnLxys_hdxN8_beduaTFmCAiChfGwj5WOCk"
+const token = ""
 const { REST } = require("@discordjs/rest");
 const {WebSocketManager} = require("@discordjs/ws");
 const { Events } = require("discord.js");
 
-const rest = new REST({ version: "10" }).setToken(token)
+const rest = new REST({ version: "9" }).setToken(token)
 const oldMembers = new Map();
 
 const gateway = new WebSocketManager({
@@ -30,7 +30,7 @@ client.on(GatewayDispatchEvents.Ready, async ({ data, api }) => {
 
 client.on(GatewayDispatchEvents.GuildMemberUpdate, async ({ data, api }) => {
     const oldMember = oldMembers.get(data.user.id);
-    const newMember = await api.guilds.getMember(data.id);
+    const newMember = await api.guilds.getMember("1094956034524725328", data.user.id);
 
     console.log(oldMember);
 
@@ -42,11 +42,15 @@ client.on(GatewayDispatchEvents.GuildMemberUpdate, async ({ data, api }) => {
 });
 
 async function setMemberData () {
-    const users = await client.api.guilds.getMembers("1097981882957824083");
+    const users = await client.api.guilds.getMembers("1094956034524725328");
     //const usersArr = Object.values(users);
-    users.forEach(x => {
-        oldMembers.set(x.user.id, x);
-    });
+    if(users) {
+        users.forEach(x => {
+            if(x.user.id === "1087478309664849950") return;
+            console.log(x.user.display_name);
+            oldMembers.set(x.user.id, x);
+        });
+    };
 }
 
 gateway.connect();
